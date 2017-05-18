@@ -18,7 +18,7 @@ public class Main {
 		Lock lock = new ReentrantLock();
 		
 		for (int i = 0; i < numPacketGenThreads; i++) {
-		    threadPool.submit();
+		    threadPool.submit(new PakectGenerator(listaPaketes, lock));
 		 }		 
 		 threadPool.shutdown();
 	}
