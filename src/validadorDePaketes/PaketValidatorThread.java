@@ -14,7 +14,29 @@ import DTO.Pakete;
 
 public class PaketValidatorThread {
 
+	public void meterPaketeEnBaseDeDatos(Pakete pakete){
+		Client client = null;	
 		
+		try {
+			String paketeInString = objetoPaketeToStringXML(pakete);
+			client = Client.create();
+			WebResource webResource = client.resource(
+					"http://localhost:8080/BoxMexWebApp/BoxMexWebApp/packetInsertor?paketInXML="+paketeInString					
+					);
+			ClientResponse response = webResource.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+			
+			if (response.getStatus() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			}			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			client.destroy();
+		}	
+	}
+		
+
 	public boolean validarPakete(Pakete pakete){
 			
 		String respuesta = null;
