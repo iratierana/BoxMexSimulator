@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(namespace = "pakete")
+@XmlRootElement(name = "pakete")
 @XmlType(propOrder = {"id","estado","listaProductos"})
 public class Pakete {
 	

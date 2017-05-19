@@ -1,4 +1,4 @@
-package Main;
+package generadorDePaketes;
 
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
@@ -11,12 +11,12 @@ import com.sun.jersey.api.client.WebResource;
 
 import DTO.Pakete;
 
-public class PakectGenerator implements Runnable{
+public class PakectGeneratorThread implements Runnable{
 	
 	ArrayList<Pakete> lisPaketes;
 	Lock lock;
 	
-	public PakectGenerator(ArrayList<Pakete> lisPaketes, Lock lock) {
+	public PakectGeneratorThread(ArrayList<Pakete> lisPaketes, Lock lock) {
 		this.lisPaketes = lisPaketes;
 		this.lock = lock;
 	}
