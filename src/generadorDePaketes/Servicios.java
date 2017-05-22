@@ -17,8 +17,8 @@ public class Servicios extends _PaketSenderDisp{
 	@Override
 	public PaketeIce getPakete(Current __current) {
 		Pakete paketea = Main.listaPaketes.get(0);
-		//Conversor convierte el pakete normal en un paketeIce
-		PaketeIce paketeIce = null;
+		Conversor conversor = new Conversor();
+		PaketeIce paketeIce = conversor.convertirPakete(paketea);
 		return paketeIce;
 	}
 

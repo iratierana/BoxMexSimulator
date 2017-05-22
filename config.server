@@ -20,5 +20,5 @@ Ice.Warn.Connections=1
 #
 Ice.Plugin.IceSSL=IceSSL.PluginFactory
 IceSSL.DefaultDir=jks
-IceSSL.Keystore=server.jks
+IceSSL.Keystore=clientkeystore
 IceSSL.Password=boxmexapp
