@@ -1,10 +1,7 @@
 
 module Demo {
-	interface PaketSender {
-	    void sendPakete();
-	};
-	
-	class Producto{
+
+	class ProductoIce{
 		int productoId;
 		string nombre;
 		string fechaCaducidad;
@@ -13,12 +10,16 @@ module Demo {
 	};
 	
 	["java:type:java.util.ArrayList<Producto>"]
-	sequence<Producto> ListaProductos;
+	sequence<ProductoIce> ListaProductos;
 	
-	class Pakete{
+	class PaketeIce{
 		int id;
 		string estado;
 		ListaProductos listaProductos;
+	};
+	
+	interface PaketSender {
+	    PaketeIce getPakete();
 	};
 };
 

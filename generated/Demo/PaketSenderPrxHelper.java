@@ -25,103 +25,109 @@ package Demo;
  **/
 public final class PaketSenderPrxHelper extends Ice.ObjectPrxHelperBase implements PaketSenderPrx
 {
-    private static final String __sendPakete_name = "sendPakete";
+    private static final String __getPakete_name = "getPakete";
 
-    public void sendPakete()
+    public PaketeIce getPakete()
     {
-        sendPakete(null, false);
+        return getPakete(null, false);
     }
 
-    public void sendPakete(java.util.Map<String, String> __ctx)
+    public PaketeIce getPakete(java.util.Map<String, String> __ctx)
     {
-        sendPakete(__ctx, true);
+        return getPakete(__ctx, true);
     }
 
-    private void sendPakete(java.util.Map<String, String> __ctx, boolean __explicitCtx)
+    private PaketeIce getPakete(java.util.Map<String, String> __ctx, boolean __explicitCtx)
     {
-        end_sendPakete(begin_sendPakete(__ctx, __explicitCtx, true, null));
+        __checkTwowayOnly(__getPakete_name);
+        return end_getPakete(begin_getPakete(__ctx, __explicitCtx, true, null));
     }
 
-    public Ice.AsyncResult begin_sendPakete()
+    public Ice.AsyncResult begin_getPakete()
     {
-        return begin_sendPakete(null, false, false, null);
+        return begin_getPakete(null, false, false, null);
     }
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx)
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx)
     {
-        return begin_sendPakete(__ctx, true, false, null);
+        return begin_getPakete(__ctx, true, false, null);
     }
 
-    public Ice.AsyncResult begin_sendPakete(Ice.Callback __cb)
+    public Ice.AsyncResult begin_getPakete(Ice.Callback __cb)
     {
-        return begin_sendPakete(null, false, false, __cb);
+        return begin_getPakete(null, false, false, __cb);
     }
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, Ice.Callback __cb)
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, Ice.Callback __cb)
     {
-        return begin_sendPakete(__ctx, true, false, __cb);
+        return begin_getPakete(__ctx, true, false, __cb);
     }
 
-    public Ice.AsyncResult begin_sendPakete(Callback_PaketSender_sendPakete __cb)
+    public Ice.AsyncResult begin_getPakete(Callback_PaketSender_getPakete __cb)
     {
-        return begin_sendPakete(null, false, false, __cb);
+        return begin_getPakete(null, false, false, __cb);
     }
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, Callback_PaketSender_sendPakete __cb)
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, Callback_PaketSender_getPakete __cb)
     {
-        return begin_sendPakete(__ctx, true, false, __cb);
+        return begin_getPakete(__ctx, true, false, __cb);
     }
 
-    public Ice.AsyncResult begin_sendPakete(IceInternal.Functional_VoidCallback __responseCb, 
-                                            IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb)
+    public Ice.AsyncResult begin_getPakete(IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
+                                           IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb)
     {
-        return begin_sendPakete(null, false, false, __responseCb, __exceptionCb, null);
+        return begin_getPakete(null, false, false, __responseCb, __exceptionCb, null);
     }
 
-    public Ice.AsyncResult begin_sendPakete(IceInternal.Functional_VoidCallback __responseCb, 
+    public Ice.AsyncResult begin_getPakete(IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
+                                           IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
+                                           IceInternal.Functional_BoolCallback __sentCb)
+    {
+        return begin_getPakete(null, false, false, __responseCb, __exceptionCb, __sentCb);
+    }
+
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, 
+                                           IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
+                                           IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb)
+    {
+        return begin_getPakete(__ctx, true, false, __responseCb, __exceptionCb, null);
+    }
+
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, 
+                                           IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
+                                           IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
+                                           IceInternal.Functional_BoolCallback __sentCb)
+    {
+        return begin_getPakete(__ctx, true, false, __responseCb, __exceptionCb, __sentCb);
+    }
+
+    private Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, 
+                                            boolean __explicitCtx, 
+                                            boolean __synchronous, 
+                                            IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
                                             IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
                                             IceInternal.Functional_BoolCallback __sentCb)
     {
-        return begin_sendPakete(null, false, false, __responseCb, __exceptionCb, __sentCb);
+        return begin_getPakete(__ctx, __explicitCtx, __synchronous, 
+                               new IceInternal.Functional_TwowayCallbackArg1<Demo.PaketeIce>(__responseCb, __exceptionCb, __sentCb)
+                                   {
+                                       public final void __completed(Ice.AsyncResult __result)
+                                       {
+                                           PaketSenderPrxHelper.__getPakete_completed(this, __result);
+                                       }
+                                   });
     }
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, 
-                                            IceInternal.Functional_VoidCallback __responseCb, 
-                                            IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb)
+    private Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, 
+                                            boolean __explicitCtx, 
+                                            boolean __synchronous, 
+                                            IceInternal.CallbackBase __cb)
     {
-        return begin_sendPakete(__ctx, true, false, __responseCb, __exceptionCb, null);
-    }
-
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, 
-                                            IceInternal.Functional_VoidCallback __responseCb, 
-                                            IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
-                                            IceInternal.Functional_BoolCallback __sentCb)
-    {
-        return begin_sendPakete(__ctx, true, false, __responseCb, __exceptionCb, __sentCb);
-    }
-
-    private Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, 
-                                             boolean __explicitCtx, 
-                                             boolean __synchronous, 
-                                             IceInternal.Functional_VoidCallback __responseCb, 
-                                             IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
-                                             IceInternal.Functional_BoolCallback __sentCb)
-    {
-        return begin_sendPakete(__ctx, 
-                                __explicitCtx, 
-                                __synchronous, 
-                                new IceInternal.Functional_OnewayCallback(__responseCb, __exceptionCb, __sentCb));
-    }
-
-    private Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, 
-                                             boolean __explicitCtx, 
-                                             boolean __synchronous, 
-                                             IceInternal.CallbackBase __cb)
-    {
-        IceInternal.OutgoingAsync __result = getOutgoingAsync(__sendPakete_name, __cb);
+        __checkAsyncTwowayOnly(__getPakete_name);
+        IceInternal.OutgoingAsync __result = getOutgoingAsync(__getPakete_name, __cb);
         try
         {
-            __result.prepare(__sendPakete_name, Ice.OperationMode.Normal, __ctx, __explicitCtx, __synchronous);
+            __result.prepare(__getPakete_name, Ice.OperationMode.Normal, __ctx, __explicitCtx, __synchronous);
             __result.writeEmptyParams();
             __result.invoke();
         }
@@ -132,9 +138,57 @@ public final class PaketSenderPrxHelper extends Ice.ObjectPrxHelperBase implemen
         return __result;
     }
 
-    public void end_sendPakete(Ice.AsyncResult __iresult)
+    public PaketeIce end_getPakete(Ice.AsyncResult __iresult)
     {
-        __end(__iresult, __sendPakete_name);
+        IceInternal.OutgoingAsync __result = IceInternal.OutgoingAsync.check(__iresult, this, __getPakete_name);
+        try
+        {
+            if(!__result.__wait())
+            {
+                try
+                {
+                    __result.throwUserException();
+                }
+                catch(Ice.UserException __ex)
+                {
+                    throw new Ice.UnknownUserException(__ex.ice_name(), __ex);
+                }
+            }
+            IceInternal.BasicStream __is = __result.startReadParams();
+            PaketeIceHolder __ret = new PaketeIceHolder();
+            __is.readObject(__ret);
+            __is.readPendingObjects();
+            __result.endReadParams();
+            return __ret.value;
+        }
+        finally
+        {
+            if(__result != null)
+            {
+                __result.cacheMessageBuffers();
+            }
+        }
+    }
+
+    static public void __getPakete_completed(Ice.TwowayCallbackArg1<PaketeIce> __cb, Ice.AsyncResult __result)
+    {
+        Demo.PaketSenderPrx __proxy = (Demo.PaketSenderPrx)__result.getProxy();
+        PaketeIce __ret = null;
+        try
+        {
+            __ret = __proxy.end_getPakete(__result);
+        }
+        catch(Ice.LocalException __ex)
+        {
+            __cb.exception(__ex);
+            return;
+        }
+        catch(Ice.SystemException __ex)
+        {
+            __cb.exception(__ex);
+            return;
+        }
+        __cb.response(__ret);
     }
 
     /**

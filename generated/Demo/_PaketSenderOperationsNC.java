@@ -22,5 +22,5 @@ package Demo;
 
 public interface _PaketSenderOperationsNC
 {
-    void sendPakete();
+    PaketeIce getPakete();
 }

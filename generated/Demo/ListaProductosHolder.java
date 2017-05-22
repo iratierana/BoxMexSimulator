@@ -20,7 +20,7 @@
 
 package Demo;
 
-public final class ListaProductosHolder extends Ice.Holder<java.util.List<Producto>>
+public final class ListaProductosHolder extends Ice.Holder<java.util.List<ProductoIce>>
 {
     public
     ListaProductosHolder()
@@ -28,7 +28,7 @@ public final class ListaProductosHolder extends Ice.Holder<java.util.List<Produc
     }
 
     public
-    ListaProductosHolder(java.util.List<Producto> value)
+    ListaProductosHolder(java.util.List<ProductoIce> value)
     {
         super(value);
     }

@@ -22,5 +22,5 @@ package Demo;
 
 public interface _PaketSenderOperations
 {
-    void sendPakete(Ice.Current __current);
+    PaketeIce getPakete(Ice.Current __current);
 }

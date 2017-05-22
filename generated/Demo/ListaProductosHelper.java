@@ -23,7 +23,7 @@ package Demo;
 public final class ListaProductosHelper
 {
     public static void
-    write(IceInternal.BasicStream __os, java.util.List<Producto> __v)
+    write(IceInternal.BasicStream __os, java.util.List<ProductoIce> __v)
     {
         if(__v == null)
         {
@@ -32,24 +32,24 @@ public final class ListaProductosHelper
         else
         {
             __os.writeSize(__v.size());
-            for(Producto __elem : __v)
+            for(ProductoIce __elem : __v)
             {
                 __os.writeObject(__elem);
             }
         }
     }
 
-    public static java.util.List<Producto>
+    public static java.util.List<ProductoIce>
     read(IceInternal.BasicStream __is)
     {
-        java.util.List<Producto> __v;
-        __v = new java.util.ArrayList<Producto>();
+        java.util.List<ProductoIce> __v;
+        __v = new java.util.ArrayList<ProductoIce>();
         final int __len0 = __is.readAndCheckSeqSize(1);
-        final String __type0 = Producto.ice_staticId();
+        final String __type0 = ProductoIce.ice_staticId();
         for(int __i0 = 0; __i0 < __len0; __i0++)
         {
             __v.add(null);
-            __is.readObject(new IceInternal.ListPatcher<Producto>(__v, Producto.class, __type0, __i0));
+            __is.readObject(new IceInternal.ListPatcher<ProductoIce>(__v, ProductoIce.class, __type0, __i0));
         }
         return __v;
     }

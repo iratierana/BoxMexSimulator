@@ -70,27 +70,30 @@ public abstract class _PaketSenderDisp extends Ice.ObjectImpl implements PaketSe
         return __ids[0];
     }
 
-    public final void sendPakete()
+    public final PaketeIce getPakete()
     {
-        sendPakete(null);
+        return getPakete(null);
     }
 
-    public static Ice.DispatchStatus ___sendPakete(PaketSender __obj, IceInternal.Incoming __inS, Ice.Current __current)
+    public static Ice.DispatchStatus ___getPakete(PaketSender __obj, IceInternal.Incoming __inS, Ice.Current __current)
     {
         __checkMode(Ice.OperationMode.Normal, __current.mode);
         __inS.readEmptyParams();
-        __obj.sendPakete(__current);
-        __inS.__writeEmptyParams();
+        PaketeIce __ret = __obj.getPakete(__current);
+        IceInternal.BasicStream __os = __inS.__startWriteParams(Ice.FormatType.DefaultFormat);
+        __os.writeObject(__ret);
+        __os.writePendingObjects();
+        __inS.__endWriteParams(true);
         return Ice.DispatchStatus.DispatchOK;
     }
 
     private final static String[] __all =
     {
+        "getPakete",
         "ice_id",
         "ice_ids",
         "ice_isA",
-        "ice_ping",
-        "sendPakete"
+        "ice_ping"
     };
 
     public Ice.DispatchStatus __dispatch(IceInternal.Incoming in, Ice.Current __current)
@@ -105,23 +108,23 @@ public abstract class _PaketSenderDisp extends Ice.ObjectImpl implements PaketSe
         {
             case 0:
             {
-                return ___ice_id(this, in, __current);
+                return ___getPakete(this, in, __current);
             }
             case 1:
             {
-                return ___ice_ids(this, in, __current);
+                return ___ice_id(this, in, __current);
             }
             case 2:
             {
-                return ___ice_isA(this, in, __current);
+                return ___ice_ids(this, in, __current);
             }
             case 3:
             {
-                return ___ice_ping(this, in, __current);
+                return ___ice_isA(this, in, __current);
             }
             case 4:
             {
-                return ___sendPakete(this, in, __current);
+                return ___ice_ping(this, in, __current);
             }
         }
 

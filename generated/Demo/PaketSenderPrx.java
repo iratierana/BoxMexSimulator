@@ -22,37 +22,37 @@ package Demo;
 
 public interface PaketSenderPrx extends Ice.ObjectPrx
 {
-    public void sendPakete();
+    public PaketeIce getPakete();
 
-    public void sendPakete(java.util.Map<String, String> __ctx);
+    public PaketeIce getPakete(java.util.Map<String, String> __ctx);
 
-    public Ice.AsyncResult begin_sendPakete();
+    public Ice.AsyncResult begin_getPakete();
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx);
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx);
 
-    public Ice.AsyncResult begin_sendPakete(Ice.Callback __cb);
+    public Ice.AsyncResult begin_getPakete(Ice.Callback __cb);
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, Ice.Callback __cb);
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, Ice.Callback __cb);
 
-    public Ice.AsyncResult begin_sendPakete(Callback_PaketSender_sendPakete __cb);
+    public Ice.AsyncResult begin_getPakete(Callback_PaketSender_getPakete __cb);
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, Callback_PaketSender_sendPakete __cb);
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, Callback_PaketSender_getPakete __cb);
 
-    public Ice.AsyncResult begin_sendPakete(IceInternal.Functional_VoidCallback __responseCb, 
-                                            IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb);
+    public Ice.AsyncResult begin_getPakete(IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
+                                           IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb);
 
-    public Ice.AsyncResult begin_sendPakete(IceInternal.Functional_VoidCallback __responseCb, 
-                                            IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
-                                            IceInternal.Functional_BoolCallback __sentCb);
+    public Ice.AsyncResult begin_getPakete(IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
+                                           IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
+                                           IceInternal.Functional_BoolCallback __sentCb);
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, 
-                                            IceInternal.Functional_VoidCallback __responseCb, 
-                                            IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb);
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, 
+                                           IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
+                                           IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb);
 
-    public Ice.AsyncResult begin_sendPakete(java.util.Map<String, String> __ctx, 
-                                            IceInternal.Functional_VoidCallback __responseCb, 
-                                            IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
-                                            IceInternal.Functional_BoolCallback __sentCb);
+    public Ice.AsyncResult begin_getPakete(java.util.Map<String, String> __ctx, 
+                                           IceInternal.Functional_GenericCallback1<PaketeIce> __responseCb, 
+                                           IceInternal.Functional_GenericCallback1<Ice.Exception> __exceptionCb, 
+                                           IceInternal.Functional_BoolCallback __sentCb);
 
-    public void end_sendPakete(Ice.AsyncResult __result);
+    public PaketeIce end_getPakete(Ice.AsyncResult __result);
 }
