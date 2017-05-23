@@ -1,9 +1,9 @@
 package validadorDePaketes;
 
-import DTO.Pakete;
-import DTO.Producto;
 import Demo.PaketeIce;
 import Demo.ProductoIce;
+import entitys.system.Pakete;
+import entitys.system.Producto;
 
 public class ConversorAPakete {
 	

@@ -1,15 +1,19 @@
 package generadorDePaketes;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import DTO.Pakete;
+import entitys.system.Pakete;
 
 public class PakectGeneratorThread implements Runnable{
 	
@@ -46,21 +50,32 @@ public class PakectGeneratorThread implements Runnable{
 			
 			client = Client.create();
 			WebResource webResource = client.resource(
-					"http://localhost:8080/BoxMexWebApp/BoxMexWebApp/packetGenerator"					
+					"http://172.17.16.135:8080/BoxMexWebApp/BoxMexWebApp/packetGenerator"					
 					);
 			ClientResponse response = webResource.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 			
 			if (response.getStatus() != 200) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}			
-			
-			pakete = response.getEntity(Pakete.class);
+			//System.out.println(response.getEntity(String.class));
+//			pakete = response.getEntity(Pakete.class);
+			pakete = paketeStringToObject(response.getEntity(String.class));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 			client.destroy();
 		}				
+		return pakete;
+	}
+	
+	private Pakete paketeStringToObject(String paketXML) throws JAXBException{
+		Pakete pakete = null;
+		JAXBContext jaxbContext = JAXBContext.newInstance(Pakete.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        
+
+        pakete = (Pakete) jaxbUnmarshaller.unmarshal(new StringReader(paketXML));
 		return pakete;
 	}
 

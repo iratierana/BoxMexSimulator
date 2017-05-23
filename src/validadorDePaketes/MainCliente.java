@@ -1,10 +1,10 @@
 package validadorDePaketes;
 
-import DTO.Pakete;
 import Demo.PaketSenderPrx;
 import Demo.PaketSenderPrxHelper;
 import Demo.PaketeIce;
 import Ice.ObjectPrx;
+import entitys.system.Pakete;
 
 public class MainCliente {
 	
@@ -46,17 +46,15 @@ public class MainCliente {
 		Boolean resultadoValidacion = false;
 		PaketValidatorThread validador = new PaketValidatorThread();
 		ConversorAPakete conversor = new ConversorAPakete();
-		ObjectPrx obj = communicator.propertyToProxy("Server.Proxy").ice_twoway().ice_secure(false);
+		
+		ObjectPrx obj = communicator.propertyToProxy("Server.Proxy").ice_twoway().ice_secure(true);
 		PaketSenderPrx twoway = (PaketSenderPrx) PaketSenderPrxHelper.checkedCast(obj);
+		
 		if(twoway == null)
         {
             System.err.println("invalid proxy");
             return 1;
         }
-		PaketSenderPrx oneway = (PaketSenderPrx) twoway.ice_oneway();
-		PaketSenderPrx batchOneway = (PaketSenderPrx) twoway.ice_batchOneway();
-		PaketSenderPrx datagram = (PaketSenderPrx) twoway.ice_datagram();
-		PaketSenderPrx batchDatagram = (PaketSenderPrx) twoway.ice_batchDatagram();
 		
 		boolean secure = false;
 		boolean salir = false;
@@ -66,16 +64,23 @@ public class MainCliente {
         do{
         	try {
         		paketeIce = twoway.getPakete();
-            	pakete = conversor.convertirPaketeIce(paketeIce);
-            	resultadoValidacion = validador.validarPakete(pakete);
-            	if(resultadoValidacion){
-            		validador.meterPaketeEnBaseDeDatos(pakete);
-            	}
+        		if(paketeIce != null){
+        			System.out.println("El pakete ha llegado");
+	            	pakete = conversor.convertirPaketeIce(paketeIce);
+	            	resultadoValidacion = validador.validarPakete(pakete);
+	            	if(resultadoValidacion){
+	            		validador.meterPaketeEnBaseDeDatos(pakete);
+	            	}
+	        	}
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			} catch (IndexOutOfBoundsException e){
+				System.out.println("La lista de espera esta vacia");
+			} catch (NullPointerException e){
+				System.out.println("Lista vacia y se devuelve un null");
 			}
-        }while(salir);
+        }while(!salir);
 		
 		return 0;
 	}

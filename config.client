@@ -1,6 +1,6 @@
 #
 # The client reads this property to create the reference to the
-# "hello" object in the server.
+# "server" object in the server.
 #
 Server.Proxy=server:tcp -p 10000:udp -p 10000:ssl -p 10001
 

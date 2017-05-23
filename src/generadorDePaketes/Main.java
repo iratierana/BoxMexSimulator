@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import DTO.Pakete;
+import entitys.system.Pakete;
 
 public class Main extends Ice.Application{
 	
@@ -16,17 +16,18 @@ public class Main extends Ice.Application{
 
 		int numPacketGenThreads = 2;
 		
-		Main app = new Main();
-        int status = app.main("Server", args, "config.server");
-        System.exit(status);
-		
 		ExecutorService threadPool = Executors.newFixedThreadPool(10);
 		Lock lock = new ReentrantLock();
 		
 		for (int i = 0; i < numPacketGenThreads; i++) {
 		    threadPool.submit(new PakectGeneratorThread(listaPaketes, lock));
 		 }		 
-		 threadPool.shutdown();
+		 
+		 Main app = new Main();
+	     int status = app.main("Server", args, "config.server");
+	     System.exit(status);
+	     
+	     threadPool.shutdown();
 	}
 
 	@Override
@@ -41,6 +42,7 @@ public class Main extends Ice.Application{
         Ice.ObjectAdapter adapter = communicator().createObjectAdapter("Server");
         adapter.add(new Servicios(), Ice.Util.stringToIdentity("server"));
         adapter.activate();
+        System.out.println("Zerbitzaria martxan");
         communicator().waitForShutdown();
         return 0;
 	}

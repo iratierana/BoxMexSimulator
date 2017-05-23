@@ -10,7 +10,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import DTO.Pakete;
+import entitys.system.Pakete;
 
 public class PaketValidatorThread {
 
@@ -21,7 +21,7 @@ public class PaketValidatorThread {
 			String paketeInString = objetoPaketeToStringXML(pakete);
 			client = Client.create();
 			WebResource webResource = client.resource(
-					"http://localhost:8080/BoxMexWebApp/BoxMexWebApp/packetInsertor?paketInXML="+paketeInString					
+					"http://172.17.16.135:8080/BoxMexWebApp/BoxMexWebApp/packetInsertor?paketInXML="+paketeInString					
 					);
 			ClientResponse response = webResource.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 			
