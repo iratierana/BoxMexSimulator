@@ -5,8 +5,8 @@ module Demo {
 		int productoId;
 		string nombre;
 		string fechaCaducidad;
-		int estanteriaId;
-		int categoriaId;
+		long estanteriaId;
+		long categoriaId;
 	};
 	
 	["java:type:java.util.ArrayList<Producto>"]

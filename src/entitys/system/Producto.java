@@ -20,10 +20,10 @@ public class Producto {
 	String fechaCaducidad;
 
 	/** The estanteria id. */
-	int estanteriaId;
+	Long estanteriaId;
 
 	/** The categoria id. */
-	int categoriaId;
+	Long categoriaId;
 
 	/**
 	 * Instantiates a new producto.
@@ -41,7 +41,7 @@ public class Producto {
 	 * @param estanteriaId the estanteria id
 	 * @param categoriaId the categoria id
 	 */
-	public Producto(final int productoId, final String nombre, final String fechaCaducidad, final int estanteriaId, final int categoriaId) {
+	public Producto(final int productoId, final String nombre, final String fechaCaducidad, final Long estanteriaId, final Long categoriaId) {
 		this.productoId = productoId;
 		this.nombre = nombre;
 		this.fechaCaducidad = fechaCaducidad;
@@ -108,7 +108,7 @@ public class Producto {
 	 *
 	 * @return the estanteria id
 	 */
-	public int getEstanteriaId() {
+	public Long getEstanteriaId() {
 		return estanteriaId;
 	}
 
@@ -117,7 +117,7 @@ public class Producto {
 	 *
 	 * @param estanteriaId the new estanteria id
 	 */
-	public void setEstanteriaId(final int estanteriaId) {
+	public void setEstanteriaId(final Long estanteriaId) {
 		this.estanteriaId = estanteriaId;
 	}
 
@@ -126,7 +126,7 @@ public class Producto {
 	 *
 	 * @return the categoria id
 	 */
-	public int getCategoriaId() {
+	public Long getCategoriaId() {
 		return categoriaId;
 	}
 
@@ -135,7 +135,7 @@ public class Producto {
 	 *
 	 * @param categoriaId the new categoria id
 	 */
-	public void setCategoriaId(final int categoriaId) {
+	public void setCategoriaId(final Long categoriaId) {
 		this.categoriaId = categoriaId;
 	}
 
