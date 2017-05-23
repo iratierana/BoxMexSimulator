@@ -12,77 +12,98 @@ import com.sun.jersey.api.client.WebResource;
 
 import entitys.system.Pakete;
 
+/**
+ * The Class PaketValidatorThread.
+ */
 public class PaketValidatorThread {
 
-	public void meterPaketeEnBaseDeDatos(Pakete pakete){
-		Client client = null;	
-		
+	/** The Constant ERROR_HTTP. */
+	public static final int ERROR_HTTP = 200;
+
+	/**
+	 * Meter pakete en la base de datos.
+	 *
+	 * @param pakete the pakete
+	 */
+	public void meterPaketeEnBaseDeDatos(final Pakete pakete) {
+		Client client = null;
+
 		try {
 			String paketeInString = objetoPaketeToStringXML(pakete);
 			client = Client.create();
 			WebResource webResource = client.resource(
-					"http://172.17.16.135:8080/BoxMexWebApp/BoxMexWebApp/packetInsertor?paketInXML="+paketeInString					
-					);
+					"http://172.17.16.135:8080/BoxMexWebApp/BoxMexWebApp/packetInsertor?paketInXML=" + paketeInString);
 			ClientResponse response = webResource.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-			
-			if (response.getStatus() != 200) {
+
+			if (response.getStatus() != ERROR_HTTP) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}			
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			client.destroy();
-		}	
+		}
 	}
-		
 
-	public boolean validarPakete(Pakete pakete){
-			
+	/**
+	 * Validar pakete.
+	 *
+	 * @param pakete
+	 *            the pakete
+	 * @return true, if successful
+	 */
+	public boolean validarPakete(final Pakete pakete) {
+
 		String respuesta = null;
-		Client client = null;	
-		
+		Client client = null;
+
 		try {
 			String paketeInString = objetoPaketeToStringXML(pakete);
 			client = Client.create();
 			WebResource webResource = client.resource(
-					"http://localhost:8080/BoxMexWebApp/BoxMexWebApp/packetValidator?paketeXml="+paketeInString					
-					);
+					"http://localhost:8080/BoxMexWebApp/BoxMexWebApp/packetValidator?paketeXml=" + paketeInString);
 			ClientResponse response = webResource.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-			
-			if (response.getStatus() != 200) {
+
+			if (response.getStatus() != ERROR_HTTP) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}			
-			
+			}
+
 			respuesta = response.getEntity(String.class);
-	
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			client.destroy();
-		}	
+		}
 		return Boolean.valueOf(respuesta);
 	}
-	
-	private String objetoPaketeToStringXML(Pakete pakete){
-		
+
+	/**
+	 * Objeto pakete to string XML.
+	 *
+	 * @param pakete
+	 *            the pakete
+	 * @return the string
+	 */
+	private String objetoPaketeToStringXML(final Pakete pakete) {
+
 		String xmlString = null;
-		
-		try{
 
-            JAXBContext jaxbContext = JAXBContext.newInstance(Pakete.class);
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		try {
 
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			JAXBContext jaxbContext = JAXBContext.newInstance(Pakete.class);
+			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-            StringWriter sw = new StringWriter();
-            jaxbMarshaller.marshal(pakete, sw);            
-            xmlString = sw.toString();
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+			StringWriter sw = new StringWriter();
+			jaxbMarshaller.marshal(pakete, sw);
+			xmlString = sw.toString();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return xmlString;
 	}
 }

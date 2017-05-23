@@ -8,44 +8,61 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import entitys.system.Pakete;
 
-public class Main extends Ice.Application{
-	
+/**
+ * The Class Main.
+ */
+public class Main extends Ice.Application {
+
+	/** The Constant TAMANO_POOL. */
+	public static final int TAMANO_POOL = 10;
+
+	/** The lista paketes. */
 	public static ArrayList<Pakete> listaPaketes = new ArrayList<Pakete>();
+
+	/** The lock. */
 	public static Lock lock = new ReentrantLock();
 
-	public static void main(String[] args) {
+	/**
+	 * The main method.
+	 *
+	 * @param args
+	 *            the arguments
+	 */
+	public static void main(final String[] args) {
 
 		int numPacketGenThreads = 2;
-		
-		ExecutorService threadPool = Executors.newFixedThreadPool(10);
-		
-		
+
+		ExecutorService threadPool = Executors.newFixedThreadPool(TAMANO_POOL);
+
 		for (int i = 0; i < numPacketGenThreads; i++) {
-		    threadPool.submit(new PakectGeneratorThread(listaPaketes, lock));
-		 }		 
-		 
-		 Main app = new Main();
-	     int status = app.main("Server", args, "config.server");
-	     System.exit(status);
-	     
-	     threadPool.shutdown();
+			threadPool.submit(new PakectGeneratorThread(listaPaketes, lock));
+		}
+
+		Main app = new Main();
+		int status = app.main("Server", args, "config.server");
+		System.exit(status);
+
+		threadPool.shutdown();
 	}
 
-	@Override
-	public int run(String[] args) {
-		
-		if(args.length > 0)
-        {
-            System.err.println(appName() + ": too many arguments");
-            return 1;
-        }
+	/**
+	 * @see Ice.Application#run(java.lang.String[]).
+	 * @return devuelve 0 como final de la funcion
+	 * @param args los parametros que se quieran enviar. En este caso nada
+	 */
+	public int run(final String[] args) {
 
-        Ice.ObjectAdapter adapter = communicator().createObjectAdapter("Server");
-        adapter.add(new Servicios(), Ice.Util.stringToIdentity("server"));
-        adapter.activate();
-        System.out.println("Zerbitzaria martxan");
-        communicator().waitForShutdown();
-        return 0;
+		if (args.length > 0) {
+			System.err.println(appName() + ": too many arguments");
+			return 1;
+		}
+
+		Ice.ObjectAdapter adapter = communicator().createObjectAdapter("Server");
+		adapter.add(new Servicios(), Ice.Util.stringToIdentity("server"));
+		adapter.activate();
+		System.out.println("Zerbitzaria martxan");
+		communicator().waitForShutdown();
+		return 0;
 	}
 
 }
