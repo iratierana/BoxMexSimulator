@@ -1,5 +1,7 @@
 package generadorDePaketes;
 
+import java.util.ArrayList;
+
 import Demo.PaketeIce;
 import Demo.ProductoIce;
 import entitys.system.Pakete;
@@ -12,7 +14,8 @@ public class Conversor {
 	}
 	
 	PaketeIce convertirPakete(Pakete pakete){
-		PaketeIce paketeIce = null;
+		PaketeIce paketeIce = new PaketeIce();
+		paketeIce.listaProductos = new ArrayList<>();
 		paketeIce.estado = pakete.getEstado();
 		paketeIce.id = pakete.getId();
 		for(int i = 0; i < pakete.getListaProductos().size(); i++){
@@ -24,7 +27,7 @@ public class Conversor {
 	}
 	
 	ProductoIce convertirProducto(Producto producto){
-		ProductoIce productoIce = null;
+		ProductoIce productoIce = new ProductoIce();
 		productoIce.categoriaId = producto.getCategoriaId();
 		productoIce.estanteriaId = producto.getEstanteriaId();
 		productoIce.fechaCaducidad = producto.getFechaCaducidad();

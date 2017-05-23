@@ -65,7 +65,6 @@ public class PakectGeneratorThread implements Runnable{
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
 			}
 			String paketeStr = response.getEntity(String.class);
-			System.out.println(paketeStr);
 			pakete = loadPakete(paketeStr);
 
 		} catch (Exception e) {

@@ -11,13 +11,14 @@ import entitys.system.Pakete;
 public class Main extends Ice.Application{
 	
 	public static ArrayList<Pakete> listaPaketes = new ArrayList<Pakete>();
+	public static Lock lock = new ReentrantLock();
 
 	public static void main(String[] args) {
 
 		int numPacketGenThreads = 2;
 		
 		ExecutorService threadPool = Executors.newFixedThreadPool(10);
-		Lock lock = new ReentrantLock();
+		
 		
 		for (int i = 0; i < numPacketGenThreads; i++) {
 		    threadPool.submit(new PakectGeneratorThread(listaPaketes, lock));
