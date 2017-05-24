@@ -3,14 +3,17 @@ package validadorDePaketes;
 import java.io.StringWriter;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import entitys.system.Pakete;
+import generadorDePaketes.Conversor;
 
 /**
  * The Class PaketValidatorThread.
@@ -19,6 +22,7 @@ public class PaketValidatorThread {
 
 	/** The Constant ERROR_HTTP. */
 	public static final int ERROR_HTTP = 200;
+	public static final int ERROR_HTTP_NO_CONTENT = 204;
 
 	/**
 	 * Meter pakete en la base de datos.
@@ -26,57 +30,46 @@ public class PaketValidatorThread {
 	 * @param pakete the pakete
 	 */
 	public void meterPaketeEnBaseDeDatos(final Pakete pakete) {
-		Client client = null;
-
+		
+		Conversor conversor = new Conversor();
+		MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
+		formData.add("paketInXML", conversor.objectToJson(pakete));
+		ClientResponse response = null;
+		WebResource webResource;
+		
 		try {
-			String paketeInString = objetoPaketeToStringXML(pakete);
-			client = Client.create();
-			WebResource webResource = client.resource(
-					"http://172.17.16.135:8080/BoxMexWebApp/BoxMexWebApp/packetInsertor?paketInXML=" + paketeInString);
-			ClientResponse response = webResource.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-
-			if (response.getStatus() != ERROR_HTTP) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+			Client client = Client.create();
+			webResource = client.resource("http://172.17.16.222:8080/BoxMexWebApp/BoxMexWebApp/packetInsertor");
+			response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
+			
+			if (response.getStatus() == ERROR_HTTP_NO_CONTENT) {
+				System.out.println("Pakete en base de datos");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			client.destroy();
 		}
 	}
-
-	/**
-	 * Validar pakete.
-	 *
-	 * @param pakete
-	 *            the pakete
-	 * @return true, if successful
-	 */
-	public boolean validarPakete(final Pakete pakete) {
-
-		String respuesta = null;
-		Client client = null;
-
+	
+	public boolean validarPakete(final Pakete pakete){
+		
+		MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
+		formData.add("paketeXml", objetoPaketeToStringXML(pakete));
+		ClientResponse response = null;
+		WebResource webResource;
+		
 		try {
-			String paketeInString = objetoPaketeToStringXML(pakete);
-			client = Client.create();
-			WebResource webResource = client.resource(
-					"http://localhost:8080/BoxMexWebApp/BoxMexWebApp/packetValidator?paketeXml=" + paketeInString);
-			ClientResponse response = webResource.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
-
+			Client client = Client.create();
+			webResource = client.resource("http://172.17.16.222:8080/BoxMexWebApp/BoxMexWebApp/packetValidator");
+			response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
+			
 			if (response.getStatus() != ERROR_HTTP) {
 				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+				
 			}
-
-			respuesta = response.getEntity(String.class);
-
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			client.destroy();
 		}
-		return Boolean.valueOf(respuesta);
+		return Boolean.valueOf(response.getEntity(String.class));
 	}
 
 	/**
@@ -95,7 +88,7 @@ public class PaketValidatorThread {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Pakete.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
 
 			StringWriter sw = new StringWriter();
 			jaxbMarshaller.marshal(pakete, sw);

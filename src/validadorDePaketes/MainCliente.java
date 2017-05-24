@@ -60,9 +60,10 @@ public class MainCliente {
 	private static int run(final Ice.Communicator communicator) {
 		PaketeIce paketeIce = null;
 		Pakete pakete = null;
-		Boolean resultadoValidacion = false;
+		Boolean resultadoValidacion = true;
 		PaketValidatorThread validador = new PaketValidatorThread();
 		ConversorAPakete conversor = new ConversorAPakete();
+		boolean salir = false;
 
 		ObjectPrx obj = communicator.propertyToProxy("Server.Proxy").ice_twoway().ice_secure(true);
 		PaketSenderPrx twoway = (PaketSenderPrx) PaketSenderPrxHelper.checkedCast(obj);
@@ -72,16 +73,10 @@ public class MainCliente {
 			return 1;
 		}
 
-		boolean secure = false;
-		boolean salir = false;
-		int timeout = -1;
-		int delay = 0;
-
 		do {
 			try {
 				paketeIce = twoway.getPakete();
 				if (paketeIce != null) {
-					System.out.println("El pakete ha llegado");
 					pakete = conversor.convertirPaketeIce(paketeIce);
 					resultadoValidacion = validador.validarPakete(pakete);
 					if (resultadoValidacion) {

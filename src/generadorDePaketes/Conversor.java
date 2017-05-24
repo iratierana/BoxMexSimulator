@@ -1,7 +1,14 @@
 
 package generadorDePaketes;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import Demo.PaketeIce;
 import Demo.ProductoIce;
@@ -53,6 +60,63 @@ public class Conversor {
 		productoIce.nombre = producto.getNombre();
 		productoIce.productoId = producto.getProductoId();
 		return productoIce;
+	}
+	
+	/**
+	 * Recibe el pakete en formato json y lo pasa a un objeto de java.
+	 *
+	 * @param paketeStr pakete en json
+	 * @return the pakete
+	 */
+	public Pakete stringJsonToObject(final String paketeStr) {
+		Pakete pakete = null;
+		ArrayList<Producto> listProd = new ArrayList<Producto>();
+
+		try {
+
+			StringReader reader = new StringReader(paketeStr);
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
+
+			JSONArray arrayProductos = (JSONArray) jsonObject.get("listaProductos");
+
+			for (int kont = 0; kont < arrayProductos.size(); kont++) {
+				JSONObject producto = (JSONObject) arrayProductos.get(kont);
+				Producto p = new Producto(1, (String) producto.get("nombre"), (String) producto.get("fechaCaducidad"),
+						(Long) producto.get("estanteriaId"), (Long) producto.get("categoriaId"));
+				listProd.add(p);
+			}
+			pakete = new Pakete(1, listProd, "entrada");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		return pakete;
+	}
+	
+	public String objectToJson(final Pakete pakete){
+		String json = null;
+		JSONObject paketea = new JSONObject();
+		JSONArray productos = new JSONArray();
+		JSONObject producto = null;
+		
+		paketea.put("id", pakete.getId());
+		paketea.put("estado", pakete.getEstado());
+		for(int i = 0; i < pakete.getListaProductos().size(); i++){
+			producto = new JSONObject();
+			producto.put("productoId", pakete.getListaProductos().get(i).getProductoId());
+			producto.put("nombre", pakete.getListaProductos().get(i).getNombre());
+			producto.put("fechaCaducidad", pakete.getListaProductos().get(i).getFechaCaducidad());
+			producto.put("estanteriaId", pakete.getListaProductos().get(i).getEstanteriaId());
+			producto.put("categoriaId", pakete.getListaProductos().get(i).getCategoriaId());
+			productos.add(producto);
+		}
+		paketea.put("listaProductos", productos);
+		json = paketea.toJSONString();
+		return json;
 	}
 
 }

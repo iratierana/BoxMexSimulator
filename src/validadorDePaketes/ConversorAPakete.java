@@ -25,11 +25,12 @@ public class ConversorAPakete {
 	 * @return the pakete
 	 */
 	public Pakete convertirPaketeIce(final PaketeIce paketeIce) {
-		Pakete pakete = null;
+		Pakete pakete = new Pakete();
 		pakete.setEstado(paketeIce.estado);
 		pakete.setId(paketeIce.id);
 		for (int i = 0; i < paketeIce.listaProductos.size(); i++) {
 			Producto producto = convertirProductoIce(paketeIce.listaProductos.get(i));
+			pakete.getListaProductos().add(producto);
 		}
 		return pakete;
 	}
@@ -42,7 +43,7 @@ public class ConversorAPakete {
 	 * @return the producto
 	 */
 	public Producto convertirProductoIce(final ProductoIce productoIce) {
-		Producto producto = null;
+		Producto producto = new Producto();
 		producto.setCategoriaId(productoIce.categoriaId);
 		producto.setEstanteriaId(productoIce.estanteriaId);
 		producto.setFechaCaducidad(productoIce.fechaCaducidad);
