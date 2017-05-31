@@ -1,6 +1,10 @@
 package generadorDePaketes;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 
 import javax.ws.rs.core.MediaType;
@@ -27,6 +31,9 @@ public class PakectGeneratorThread implements Runnable {
 
 	/** The lock. */
 	Lock lock;
+	
+	final String FICHEROPROPIEDADES = "ipConf.properties";
+	String host;
 
 	/**
 	 * Instantiates a new pakect generator thread.
@@ -72,10 +79,10 @@ public class PakectGeneratorThread implements Runnable {
 		Conversor conversor = new Conversor();
 
 		try {
-
+			cargarPropiedades();
 			client = Client.create();
 			WebResource webResource = client
-					.resource("http://172.17.16.222:8080/BoxMexWebApp/BoxMexWebApp/packetGenerator");
+					.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetGenerator");
 			ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
 			if (response.getStatus() != ERROR_HTTP) {
@@ -90,6 +97,17 @@ public class PakectGeneratorThread implements Runnable {
 			client.destroy();
 		}
 		return pakete;
+	}
+	
+	/**
+	 * Cargar ip del archivo de configuracion.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void cargarPropiedades() throws FileNotFoundException, IOException{
+		Properties propiedades = new Properties();
+		propiedades.load(new FileInputStream(FICHEROPROPIEDADES));
+		host = propiedades.getProperty("ipAplication", "127.0.0.1");
 	}
 
 	

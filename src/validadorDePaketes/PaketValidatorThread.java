@@ -1,6 +1,10 @@
 package validadorDePaketes;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -23,23 +27,35 @@ public class PaketValidatorThread {
 	/** The Constant ERROR_HTTP. */
 	public static final int ERROR_HTTP = 200;
 	public static final int ERROR_HTTP_NO_CONTENT = 204;
-
+	final String FICHEROPROPIEDADES = "ipConf.properties";
+	String host;
+	
+	/**
+	 * Cargar ip del archivo de configuracion.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void cargarPropiedades() throws FileNotFoundException, IOException{
+		Properties propiedades = new Properties();
+		propiedades.load(new FileInputStream(FICHEROPROPIEDADES));
+		host = propiedades.getProperty("ipAplication", "127.0.0.1");
+	}
+	
 	/**
 	 * Meter pakete en la base de datos.
 	 *
 	 * @param pakete the pakete
 	 */
 	public void meterPaketeEnBaseDeDatos(final Pakete pakete) {
-		
 		Conversor conversor = new Conversor();
 		MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
 		formData.add("paketInXML", conversor.objectToJson(pakete));
 		ClientResponse response = null;
 		WebResource webResource;
-		
 		try {
+			cargarPropiedades();
 			Client client = Client.create();
-			webResource = client.resource("http://172.17.16.222:8080/BoxMexWebApp/BoxMexWebApp/packetInsertor");
+			webResource = client.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetInsertor");
 			response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
 			
 			if (response.getStatus() == ERROR_HTTP_NO_CONTENT) {
@@ -56,10 +72,10 @@ public class PaketValidatorThread {
 		formData.add("paketeXml", objetoPaketeToStringXML(pakete));
 		ClientResponse response = null;
 		WebResource webResource;
-		
 		try {
+			cargarPropiedades();
 			Client client = Client.create();
-			webResource = client.resource("http://172.17.16.222:8080/BoxMexWebApp/BoxMexWebApp/packetValidator");
+			webResource = client.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetValidator");
 			response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
 			
 			if (response.getStatus() != ERROR_HTTP) {
