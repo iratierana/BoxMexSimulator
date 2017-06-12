@@ -9,6 +9,7 @@ import java.util.Properties;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import com.sun.jersey.api.client.Client;
@@ -27,6 +28,7 @@ public class PaketValidatorThread {
 	/** The Constant ERROR_HTTP. */
 	public static final int ERROR_HTTP = 200;
 	public static final int ERROR_HTTP_NO_CONTENT = 204;
+	private  String localhost = "127.0.0.1";
 	final String FICHEROPROPIEDADES = "ipConf.properties";
 	String host;
 	
@@ -38,53 +40,38 @@ public class PaketValidatorThread {
 	public void cargarPropiedades() throws FileNotFoundException, IOException{
 		Properties propiedades = new Properties();
 		propiedades.load(new FileInputStream(FICHEROPROPIEDADES));
-		host = propiedades.getProperty("ipAplication", "127.0.0.1");
+		host = propiedades.getProperty("ipAplication", localhost);
 	}
 	
 	/**
 	 * Meter pakete en la base de datos.
 	 *
 	 * @param pakete the pakete
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	public void meterPaketeEnBaseDeDatos(final Pakete pakete) {
+	public void meterPaketeEnBaseDeDatos(final Pakete pakete) throws FileNotFoundException, IOException {
 		Conversor conversor = new Conversor();
 		MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
 		formData.add("paketInXML", conversor.objectToJson(pakete));
-		ClientResponse response = null;
+		ClientResponse response;
 		WebResource webResource;
-		try {
-			cargarPropiedades();
-			Client client = Client.create();
-			webResource = client.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetInsertor");
-			response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
-			
-			if (response.getStatus() == ERROR_HTTP_NO_CONTENT) {
-				System.out.println("Pakete en base de datos");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		cargarPropiedades();
+		Client client = Client.create();
+		webResource = client.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetInsertor");
+		response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
 	}
 	
-	public boolean validarPakete(final Pakete pakete){
+	public boolean validarPakete(final Pakete pakete) throws FileNotFoundException, IOException, JAXBException{
 		
 		MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
 		formData.add("paketeXml", objetoPaketeToStringXML(pakete));
-		ClientResponse response = null;
+		ClientResponse response;
 		WebResource webResource;
-		try {
-			cargarPropiedades();
-			Client client = Client.create();
-			webResource = client.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetValidator");
-			response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
-			
-			if (response.getStatus() != ERROR_HTTP) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-				
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		cargarPropiedades();
+		Client client = Client.create();
+		webResource = client.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetValidator");
+		response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
 		return Boolean.valueOf(response.getEntity(String.class));
 	}
 
@@ -94,25 +81,20 @@ public class PaketValidatorThread {
 	 * @param pakete
 	 *            the pakete
 	 * @return the string
+	 * @throws JAXBException 
 	 */
-	private String objetoPaketeToStringXML(final Pakete pakete) {
+	private String objetoPaketeToStringXML(final Pakete pakete) throws JAXBException {
 
-		String xmlString = null;
+		String xmlString;
 
-		try {
+		JAXBContext jaxbContext = JAXBContext.newInstance(Pakete.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 
-			JAXBContext jaxbContext = JAXBContext.newInstance(Pakete.class);
-			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
 
-			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
-
-			StringWriter sw = new StringWriter();
-			jaxbMarshaller.marshal(pakete, sw);
-			xmlString = sw.toString();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		StringWriter sw = new StringWriter();
+		jaxbMarshaller.marshal(pakete, sw);
+		xmlString = sw.toString();
 		return xmlString;
 	}
 }

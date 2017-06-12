@@ -1,5 +1,10 @@
 package validadorDePaketes;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javax.xml.bind.JAXBException;
+
 import Demo.PaketSenderPrx;
 import Demo.PaketSenderPrxHelper;
 import Demo.PaketeIce;
@@ -15,19 +20,15 @@ public class MainCliente {
 	public static final int ESPERA_EN_MILISGUNDOS = 5000;
 
 	/**
-	 * Instantiates a new main cliente.
-	 */
-	public MainCliente() {
-
-	}
-
-	/**
 	 * The main method.
 	 *
 	 * @param args
 	 *            the arguments
+	 * @throws InterruptedException 
+	 * @throws JAXBException 
+	 * @throws IOException 
 	 */
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws JAXBException, InterruptedException, IOException {
 		int status = 0;
 		java.util.List<String> extraArgs = new java.util.ArrayList<>();
 
@@ -39,7 +40,6 @@ public class MainCliente {
 		try {
 			communicator = Ice.Util.initialize(args);
 			if (!extraArgs.isEmpty()) {
-				System.err.println("too many arguments");
 				status = 1;
 			} else {
 				status = run(communicator);
@@ -56,11 +56,14 @@ public class MainCliente {
 	 *
 	 * @param communicator the communicator
 	 * @return the int
+	 * @throws JAXBException 
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
-	private static int run(final Ice.Communicator communicator) {
-		PaketeIce paketeIce = null;
-		Pakete pakete = null;
-		Boolean resultadoValidacion = true;
+	private static int run(final Ice.Communicator communicator) throws JAXBException, InterruptedException, IOException {
+		PaketeIce paketeIce;
+		Pakete pakete;
+		Boolean resultadoValidacion;
 		PaketValidatorThread validador = new PaketValidatorThread();
 		ConversorAPakete conversor = new ConversorAPakete();
 		boolean salir = false;
@@ -69,31 +72,27 @@ public class MainCliente {
 		PaketSenderPrx twoway = (PaketSenderPrx) PaketSenderPrxHelper.checkedCast(obj);
 
 		if (twoway == null) {
-			System.err.println("invalid proxy");
 			return 1;
 		}
 
 		do {
-			try {
 				paketeIce = twoway.getPakete();
 				if (paketeIce != null) {
 					pakete = conversor.convertirPaketeIce(paketeIce);
 					resultadoValidacion = validador.validarPakete(pakete);
-					if (resultadoValidacion) {
-						validador.meterPaketeEnBaseDeDatos(pakete);
-					}
+					mirarResultadoValidador(resultadoValidacion, pakete, validador);
 				}
 				Thread.sleep(ESPERA_EN_MILISGUNDOS);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (IndexOutOfBoundsException e) {
-				System.out.println("La lista de espera esta vacia");
-			} catch (NullPointerException e) {
-				System.out.println("Lista vacia y se devuelve un null");
-			}
 		} while (!salir);
 
 		return 0;
+	}
+
+	private static void mirarResultadoValidador(Boolean resultadoValidacion, Pakete pakete, PaketValidatorThread validador) throws FileNotFoundException, IOException {
+		if (resultadoValidacion) {
+			validador.meterPaketeEnBaseDeDatos(pakete);
+		}
+		
 	}
 
 }

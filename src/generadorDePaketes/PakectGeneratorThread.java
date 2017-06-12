@@ -1,7 +1,6 @@
 package generadorDePaketes;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -25,6 +24,9 @@ public class PakectGeneratorThread implements Runnable {
 
 	/** The Constant ERROR_HTTP. */
 	public static final int ERROR_HTTP = 200;
+	
+	/** The Constant Limite paketes */
+	public static final int LIMITEPAKETES = 1000;
 
 	/** The lis paketes. */
 	ArrayList<Pakete> lisPaketes;
@@ -32,8 +34,13 @@ public class PakectGeneratorThread implements Runnable {
 	/** The lock. */
 	Lock lock;
 	
+	/** Fichero de propiedades*/
 	final String FICHEROPROPIEDADES = "ipConf.properties";
+	
+	/** The host*/
 	String host;
+	
+	private  String localhost = "127.0.0.1";
 
 	/**
 	 * Instantiates a new pakect generator thread.
@@ -52,17 +59,23 @@ public class PakectGeneratorThread implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
-	public void run() {
-		while (true) {
+	public void run(){
+		Boolean irten = false;
+		while (!irten) {
 			try {
 				Pakete pakete = getPaketeFromServer();
 				Thread.sleep(ESPERA_EN_MILISGUNDOS);
 				lock.lock();
 				lisPaketes.add(pakete);
-				System.out.println(lisPaketes.size());
 				lock.unlock();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally{
+				if(lisPaketes.size() > LIMITEPAKETES){
+					irten = true;
+				}
 			}
 		}
 	}
@@ -71,43 +84,33 @@ public class PakectGeneratorThread implements Runnable {
 	 * Se conecta al servidor y llama al servicio web para obtener e pakete.
 	 *
 	 * @return el pakete que se ha obtenido desde el servidor
+	 * @throws IOException 
 	 */
-	private Pakete getPaketeFromServer() {
+	private Pakete getPaketeFromServer() throws IOException {
 
-		Pakete pakete = null;
-		Client client = null;
+		Pakete pakete;
+		Client client;
 		Conversor conversor = new Conversor();
 
-		try {
 			cargarPropiedades();
 			client = Client.create();
 			WebResource webResource = client
 					.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetGenerator");
 			ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
-
-			if (response.getStatus() != ERROR_HTTP) {
-				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-			}
 			String paketeStr = response.getEntity(String.class);
 			pakete = conversor.stringJsonToObject(paketeStr);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
 			client.destroy();
-		}
 		return pakete;
 	}
 	
 	/**
 	 * Cargar ip del archivo de configuracion.
-	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void cargarPropiedades() throws FileNotFoundException, IOException{
+	public void cargarPropiedades() throws IOException{
 		Properties propiedades = new Properties();
 		propiedades.load(new FileInputStream(FICHEROPROPIEDADES));
-		host = propiedades.getProperty("ipAplication", "127.0.0.1");
+		host = propiedades.getProperty("ipAplication", localhost);
 	}
 
 	

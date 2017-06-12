@@ -20,12 +20,6 @@ import entitys.system.Producto;
  */
 public class Conversor {
 
-	/**
-	 * Instantiates a new conversor.
-	 */
-	public Conversor() {
-
-	}
 
 	/**
 	 * Convertir pakete de objeto pakete normal a objeto ice para poder enviar desde el socket.
@@ -67,8 +61,9 @@ public class Conversor {
 	 *
 	 * @param paketeStr pakete en json
 	 * @return the pakete
+	 * @throws IOException 
 	 */
-	public Pakete stringJsonToObject(final String paketeStr) {
+	public Pakete stringJsonToObject(final String paketeStr) throws IOException {
 		Pakete pakete = null;
 		ArrayList<Producto> listProd = new ArrayList<Producto>();
 
@@ -88,8 +83,6 @@ public class Conversor {
 			}
 			pakete = new Pakete(1, listProd, "entrada");
 
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -98,10 +91,10 @@ public class Conversor {
 	}
 	
 	public String objectToJson(final Pakete pakete){
-		String json = null;
+		String json;
 		JSONObject paketea = new JSONObject();
 		JSONArray productos = new JSONArray();
-		JSONObject producto = null;
+		JSONObject producto;
 		
 		paketea.put("id", pakete.getId());
 		paketea.put("estado", pakete.getEstado());

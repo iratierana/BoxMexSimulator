@@ -20,7 +20,7 @@ public class Main extends Ice.Application {
 	public static ArrayList<Pakete> listaPaketes = new ArrayList<Pakete>();
 
 	/** The lock. */
-	public static Lock lock = new ReentrantLock();
+	public final static Lock lock = new ReentrantLock();
 
 	/**
 	 * The main method.
@@ -53,14 +53,12 @@ public class Main extends Ice.Application {
 	public int run(final String[] args) {
 
 		if (args.length > 0) {
-			System.err.println(appName() + ": too many arguments");
 			return 1;
 		}
 
 		Ice.ObjectAdapter adapter = communicator().createObjectAdapter("Server");
 		adapter.add(new Servicios(), Ice.Util.stringToIdentity("server"));
 		adapter.activate();
-		System.out.println("Zerbitzaria martxan");
 		communicator().waitForShutdown();
 		return 0;
 	}
