@@ -1,6 +1,5 @@
 package validadorDePaketes;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
@@ -18,6 +17,10 @@ public class MainCliente {
 
 	/** The Constant ESPERA_EN_MILISGUNDOS. */
 	public static final int ESPERA_EN_MILISGUNDOS = 5000;
+	
+	private MainCliente(){
+		
+	}		
 
 	/**
 	 * The main method.
@@ -45,7 +48,9 @@ public class MainCliente {
 				status = run(communicator);
 			}
 		} finally {
-			communicator.destroy();
+			if(communicator != null){
+				communicator.destroy();
+			}
 		}
 
 		System.exit(status);
@@ -67,6 +72,7 @@ public class MainCliente {
 		PaketValidatorThread validador = new PaketValidatorThread();
 		ConversorAPakete conversor = new ConversorAPakete();
 		boolean salir = false;
+		int paketes = 0;
 
 		ObjectPrx obj = communicator.propertyToProxy("Server.Proxy").ice_twoway().ice_secure(true);
 		PaketSenderPrx twoway = (PaketSenderPrx) PaketSenderPrxHelper.checkedCast(obj);
@@ -83,12 +89,17 @@ public class MainCliente {
 					mirarResultadoValidador(resultadoValidacion, pakete, validador);
 				}
 				Thread.sleep(ESPERA_EN_MILISGUNDOS);
+				if(paketes == 1000){
+					salir = true;
+				}else{
+					paketes++;
+				}
 		} while (!salir);
 
 		return 0;
 	}
 
-	private static void mirarResultadoValidador(Boolean resultadoValidacion, Pakete pakete, PaketValidatorThread validador) throws FileNotFoundException, IOException {
+	private static void mirarResultadoValidador(Boolean resultadoValidacion, Pakete pakete, PaketValidatorThread validador) throws IOException {
 		if (resultadoValidacion) {
 			validador.meterPaketeEnBaseDeDatos(pakete);
 		}

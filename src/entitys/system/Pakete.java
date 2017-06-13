@@ -1,6 +1,7 @@
 package entitys.system;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -19,13 +20,13 @@ public class Pakete {
 	String estado;
 
 	/** The lista productos. */
-	ArrayList<Producto> listaProductos = new ArrayList<Producto>();
+	List<Producto> listaProductos;
 
 	/**
 	 * Instantiates a new pakete.
 	 */
 	public Pakete() {
-
+		this.listaProductos = new ArrayList<>();
 	}
 
 	/**
@@ -35,7 +36,7 @@ public class Pakete {
 	 * @param listaProductos the lista productos
 	 * @param estado the estado
 	 */
-	public Pakete(final int id, final ArrayList<Producto> listaProductos, final String estado) {
+	public Pakete(final int id, final List<Producto> listaProductos, final String estado) {
 		super();
 		this.id = id;
 		this.listaProductos = listaProductos;
@@ -95,7 +96,7 @@ public class Pakete {
 	 *
 	 * @return the lista productos
 	 */
-	public ArrayList<Producto> getListaProductos() {
+	public List<Producto> getListaProductos() {
 		return listaProductos;
 	}
 
@@ -104,7 +105,7 @@ public class Pakete {
 	 *
 	 * @param listaProductos the new lista productos
 	 */
-	public void setListaProductos(final ArrayList<Producto> listaProductos) {
+	public void setListaProductos(final List<Producto> listaProductos) {
 		this.listaProductos = listaProductos;
 	}
 

@@ -1,6 +1,7 @@
 package generadorDePaketes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
@@ -17,10 +18,10 @@ public class Main extends Ice.Application {
 	public static final int TAMANO_POOL = 10;
 
 	/** The lista paketes. */
-	public static ArrayList<Pakete> listaPaketes = new ArrayList<Pakete>();
+	protected static final List<Pakete> listaPaketes = new ArrayList<>();
 
 	/** The lock. */
-	public final static Lock lock = new ReentrantLock();
+	public static final Lock lock = new ReentrantLock();
 
 	/**
 	 * The main method.

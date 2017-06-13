@@ -4,6 +4,7 @@ package generadorDePaketes;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -65,7 +66,7 @@ public class Conversor {
 	 */
 	public Pakete stringJsonToObject(final String paketeStr) throws IOException {
 		Pakete pakete = null;
-		ArrayList<Producto> listProd = new ArrayList<Producto>();
+		List<Producto> listProd = new ArrayList<>();
 
 		try {
 

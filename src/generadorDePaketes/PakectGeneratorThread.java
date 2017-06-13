@@ -2,10 +2,11 @@ package generadorDePaketes;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 
+import org.apache.log4j.Logger;
 import javax.ws.rs.core.MediaType;
 
 import com.sun.jersey.api.client.Client;
@@ -29,27 +30,28 @@ public class PakectGeneratorThread implements Runnable {
 	public static final int LIMITEPAKETES = 1000;
 
 	/** The lis paketes. */
-	ArrayList<Pakete> lisPaketes;
+	List<Pakete> lisPaketes;
 
 	/** The lock. */
 	Lock lock;
 	
 	/** Fichero de propiedades*/
-	final String FICHEROPROPIEDADES = "ipConf.properties";
+	static final String FICHEROPROPIEDADES = "ipConf.properties";
 	
 	/** The host*/
 	String host;
 	
-	private  String localhost = "127.0.0.1";
+	
+	static final Logger logger = Logger.getLogger(PakectGeneratorThread.class);
 
 	/**
 	 * Instantiates a new pakect generator thread.
 	 *
-	 * @param lisPaketes the lis paketes
+	 * @param listaPaketes the lis paketes
 	 * @param lock the lock
 	 */
-	public PakectGeneratorThread(final ArrayList<Pakete> lisPaketes, final Lock lock) {
-		this.lisPaketes = lisPaketes;
+	public PakectGeneratorThread(final List<Pakete> listaPaketes, final Lock lock) {
+		this.lisPaketes = listaPaketes;
 		this.lock = lock;
 	}
 
@@ -69,9 +71,10 @@ public class PakectGeneratorThread implements Runnable {
 				lisPaketes.add(pakete);
 				lock.unlock();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.info(e);
+				Thread.currentThread().interrupt();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.info(e);
 			}finally{
 				if(lisPaketes.size() > LIMITEPAKETES){
 					irten = true;
@@ -110,7 +113,7 @@ public class PakectGeneratorThread implements Runnable {
 	public void cargarPropiedades() throws IOException{
 		Properties propiedades = new Properties();
 		propiedades.load(new FileInputStream(FICHEROPROPIEDADES));
-		host = propiedades.getProperty("ipAplication", localhost);
+		host = propiedades.getProperty("ipAplication");
 	}
 
 	

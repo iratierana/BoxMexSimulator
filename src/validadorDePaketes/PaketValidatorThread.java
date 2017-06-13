@@ -28,8 +28,7 @@ public class PaketValidatorThread {
 	/** The Constant ERROR_HTTP. */
 	public static final int ERROR_HTTP = 200;
 	public static final int ERROR_HTTP_NO_CONTENT = 204;
-	private  String localhost = "127.0.0.1";
-	final String FICHEROPROPIEDADES = "ipConf.properties";
+	final static String FICHEROPROPIEDADES = "ipConf.properties";
 	String host;
 	
 	/**
@@ -37,10 +36,10 @@ public class PaketValidatorThread {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	public void cargarPropiedades() throws FileNotFoundException, IOException{
+	public void cargarPropiedades() throws IOException{
 		Properties propiedades = new Properties();
 		propiedades.load(new FileInputStream(FICHEROPROPIEDADES));
-		host = propiedades.getProperty("ipAplication", localhost);
+		host = propiedades.getProperty("ipAplication");
 	}
 	
 	/**
@@ -50,7 +49,7 @@ public class PaketValidatorThread {
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public void meterPaketeEnBaseDeDatos(final Pakete pakete) throws FileNotFoundException, IOException {
+	public void meterPaketeEnBaseDeDatos(final Pakete pakete) throws  IOException {
 		Conversor conversor = new Conversor();
 		MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
 		formData.add("paketInXML", conversor.objectToJson(pakete));
@@ -60,9 +59,12 @@ public class PaketValidatorThread {
 		Client client = Client.create();
 		webResource = client.resource("http://"+host+":8080/BoxMexWebApp/BoxMexWebApp/packetInsertor");
 		response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class,formData);
+		if (response.getStatus() == ERROR_HTTP_NO_CONTENT) {
+			System.out.println("Pakete en base de datos");
+		}
 	}
 	
-	public boolean validarPakete(final Pakete pakete) throws FileNotFoundException, IOException, JAXBException{
+	public boolean validarPakete(final Pakete pakete) throws IOException, JAXBException{
 		
 		MultivaluedMap<String,String> formData = new MultivaluedMapImpl();
 		formData.add("paketeXml", objetoPaketeToStringXML(pakete));
